@@ -21,5 +21,5 @@ func init() {
 	rootCmd.AddCommand(pushCmd)
 
 	pushCmd.Flags().StringArrayVarP(&reviewers, "reviewers", "r", nil,
-		"Space separated list of reviewer emails or teams")
+		"Space separated list of reviewer email IDs or teams")
 }

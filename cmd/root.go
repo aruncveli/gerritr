@@ -14,20 +14,16 @@ var Branch string
 /*
 Change state
 
-Allowed values are [private, remove-private], [wip and ready]
+Ignored if the value is not one of [private, remove-private], [wip or ready]
 
 [private, remove-private]: https://gerrit-documentation.storage.googleapis.com/Documentation/3.6.2/user-upload.html#private
-[wip and ready]: https://gerrit-documentation.storage.googleapis.com/Documentation/3.6.2/user-upload.html#wip
+[wip or ready]: https://gerrit-documentation.storage.googleapis.com/Documentation/3.6.2/user-upload.html#wip
 */
 var State string
 var supportedChangeStates = []string{"private", "remove-private", "wip",
 	"ready"}
 
-/*
-Commit [message]
-
-[message]: https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---messageltmsggt
-*/
+// Commit message
 var Message string
 
 var rootCmd = &cobra.Command{

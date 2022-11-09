@@ -8,12 +8,27 @@ import (
 	"golang.org/x/exp/slices"
 )
 
+// Target branch name
 var Branch string
-var State string
-var Message string
 
+/*
+Change state
+
+Allowed values are [private, remove-private], [wip and ready]
+
+[private, remove-private]: https://gerrit-documentation.storage.googleapis.com/Documentation/3.6.2/user-upload.html#private
+[wip and ready]: https://gerrit-documentation.storage.googleapis.com/Documentation/3.6.2/user-upload.html#wip
+*/
+var State string
 var supportedChangeStates = []string{"private", "remove-private", "wip",
 	"ready"}
+
+/*
+Commit [message]
+
+[message]: https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---messageltmsggt
+*/
+var Message string
 
 var rootCmd = &cobra.Command{
 	Use:   "gerritr",

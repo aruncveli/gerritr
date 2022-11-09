@@ -25,24 +25,71 @@ func run(arg ...string) ([]byte, error) {
 	return exec.Command(ExecName, arg...).CombinedOutput()
 }
 
-func Commit(msg string) ([]byte, error) {
+// Tries to create a commit and exits if fails
+func Commit(msg string) []byte {
 	arg := append(commitWithMsgArgs, msg)
-	return run(arg...)
-}
-
-func Push(refSpec string) ([]byte, error) {
-	arg := append(pushArgs, refSpec)
-	return run(arg...)
-}
-
-func Amend(msg string) ([]byte, error) {
-	if msg == "" {
-		return run(amendNoEditArgs...)
+	output, err := run(arg...)
+	if err != nil {
+		fmt.Println("Cannot commit")
+		fmt.Println(output)
+		os.Exit(1)
 	}
-	arg := append(amendWithMsgArgs, msg)
-	return run(arg...)
+	return output
 }
 
+// Tries to push to origin and exits if fails
+func Push(refSpec string) []byte {
+	fmt.Println("Pushing with spec", refSpec)
+	arg := append(pushArgs, refSpec)
+	output, err := run(arg...)
+	if err != nil {
+		fmt.Println("Cannot push")
+		fmt.Println(output)
+		os.Exit(1)
+	}
+	return output
+}
+
+func amendWithMsg(msg string) []byte {
+	arg := append(amendWithMsgArgs, msg)
+	output, err := run(arg...)
+	if err != nil {
+		fmt.Println("Cannot amend")
+		fmt.Println(output)
+		os.Exit(1)
+	}
+	return output
+}
+
+func amendNoEdit() []byte {
+	output, err := run(amendNoEditArgs...)
+	if err != nil {
+		fmt.Println("Cannot amend")
+		fmt.Println(output)
+		os.Exit(1)
+	}
+	return output
+}
+
+/*
+Tries to amend the last commit and exits if fails. If msg parameter is non-empty, replaces the commit message.
+*/
+func Amend(msg string) []byte {
+	if msg == "" {
+		fmt.Println("Amending without editing the commit message")
+		return amendNoEdit()
+	}
+	fmt.Println("Amending with message", msg)
+	return amendWithMsg(msg)
+}
+
+/*
+Checks if main or master branch is present in the repository - main before master. Exits if neither is present.
+
+Uses [rev-parse --verify].
+
+[rev-parse --verify]: https://git-scm.com/docs/git-rev-parse#Documentation/git-rev-parse.txt---verify
+*/
 func GetUpstreamBranch() string {
 
 	for _, branch := range branches {

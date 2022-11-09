@@ -1,9 +1,7 @@
 teams:
   backend:
-    - b1@yes.com
-    - b2@yes.com
+    - b1@org.com
+    - b2@org.com
   frontend:
-    - f1@yes.com
-    - f2@yes.com
-allowedEmailDomains:
-  - yes.com
+    - f1@org.com
+    - f2@org.com

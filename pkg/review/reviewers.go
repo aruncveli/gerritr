@@ -6,42 +6,49 @@ import (
 	"os"
 )
 
-func GetReviewers(reviewersFromCmd []string) []string {
+const teamsKeyPrefix = "teams."
+const reviewersFilename = "REVIEWERS"
+
+/*
+Resolves reviewers from the input parameters and REVIEWERS file
+
+For each string in the input slice,
+  - If it is an email ID, adds as is
+  - If it is not an email ID, assumes it to be a team name. Tries to resolve the team members' email IDs from config
+
+Then, reads REVIEWERS file and adds each line. Returns a slice of resolved reviewers, with each element prefixed with "r=", as per [the format required by Gerrit].
+
+[the format required by Gerrit]: https://gerrit-documentation.storage.googleapis.com/Documentation/3.6.2/user-upload.html#reviewers
+*/
+func ResolveReviewers(reviewersInput []string) []string {
+
 	fmt.Println("Resolving reviewers")
 	var resolvedReviewers []string
 
-	var validateAndAdd = func(reviewer string) bool {
-		if IsValidEmail(reviewer) {
-			resolvedReviewers = append(resolvedReviewers, reviewer)
-			return true
-		}
-		return false
-	}
-
-	if len(reviewersFromCmd) != 0 {
-		for _, reviewerFromCmd := range reviewersFromCmd {
-			if !validateAndAdd(reviewerFromCmd) {
-				teamKey := "teams." + reviewerFromCmd
-				if Config.Exists(teamKey) {
-					reviewersFromCfg := Config.Strings(teamKey)
-					for _, reviewerFromCfg := range reviewersFromCfg {
-						validateAndAdd(reviewerFromCfg)
-					}
+	if len(reviewersInput) != 0 {
+		for _, reviewer := range reviewersInput {
+			if IsEmail(reviewer) {
+				resolvedReviewers = append(resolvedReviewers, reviewer)
+			} else {
+				teamsKey := teamsKeyPrefix + reviewer
+				if Config.Exists(teamsKey) {
+					reviewersFromCfg := Config.Strings(teamsKey)
+					resolvedReviewers = append(resolvedReviewers, reviewersFromCfg...)
 				}
 			}
 		}
 	}
 
-	fmt.Println("Opening REVIEWERS")
-	fReviewers, err := os.Open("REVIEWERS")
+	fmt.Println("Opening", reviewersFilename)
+	fReviewers, err := os.Open(reviewersFilename)
 	if err != nil {
 		fmt.Println("Cannot", err)
 	} else {
-		fmt.Println("Reading REVIEWERS")
+		fmt.Println("Reading", reviewersFilename)
 		scanner := bufio.NewScanner(fReviewers)
 		for scanner.Scan() {
 			reviewer := scanner.Text()
-			validateAndAdd(reviewer)
+			resolvedReviewers = append(resolvedReviewers, reviewer)
 		}
 	}
 	defer fReviewers.Close()

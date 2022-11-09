@@ -1,11 +1,9 @@
 package main
 
 import (
-	"gerritr/cmd"
-	"gerritr/pkg/review"
+	"github.com/aruncveli/gerritr/cmd"
 )
 
 func main() {
-	review.InitConfig()
 	cmd.Execute()
 }

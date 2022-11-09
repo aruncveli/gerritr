@@ -1,12 +1,14 @@
 package action
 
 import (
-	"gerritr/pkg/git"
 	"reflect"
 	"testing"
+
+	"github.com/aruncveli/gerritr/pkg/git"
 )
 
 func TestPatch(t *testing.T) {
+	// Mock/Hack
 	git.ExecName = "echo"
 
 	type args struct {

@@ -1,21 +1,17 @@
 package action
 
 import (
-	"fmt"
-	"gerritr/pkg/git"
-	"os"
+	"github.com/aruncveli/gerritr/pkg/git"
 )
 
+/*
+Amends the last commit and pushes it. Returns the combined output of [commit --amend] and [push] commands.
+
+[commit --amend]: https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---amend
+[push]: https://git-scm.com/docs/git-push
+*/
 func Patch(branch string, state string, msg string) []byte {
-
-	fmt.Println("Amending the last commit")
-	result, err := git.Amend(msg)
-	if err != nil {
-		fmt.Printf("Cannot amend the review\n%s\n%s", result, err)
-		os.Exit(1)
-	}
-
+	amendOutput := git.Amend(msg)
 	pushOutput := Push(branch, state, msg, nil)
-	result = append(result, pushOutput...)
-	return result
+	return append(amendOutput, pushOutput...)
 }

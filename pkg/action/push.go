@@ -2,49 +2,44 @@ package action
 
 import (
 	"fmt"
-	"gerritr/pkg/git"
-	"gerritr/pkg/review"
-	"os"
 	"runtime"
 	"strings"
+
+	"github.com/aruncveli/gerritr/pkg/git"
+	"github.com/aruncveli/gerritr/pkg/review"
 )
 
-func Push(branch string, state string, msg string, reviewers []string) []byte {
+/*
+Adds reviewers and pushes to origin
 
-	var result []byte
+  - If the branch parameter is empty, checks if main or master branch is present in the repository
+  - If the message parameter is non-empty, creates a new commit first, with the staged files and the given message
+
+Returns the combined output of [commit] and [push] commands
+
+[commit]: https://git-scm.com/docs/git-commit
+[push]: https://git-scm.com/docs/git-push
+*/
+func Push(branch string, state string, msg string, reviewers []string) []byte {
+	var commitOutput []byte
 	if notPatchFlow() && msg != "" {
-		var err error
-		result, err = git.Commit(msg)
-		if err != nil {
-			fmt.Printf("Cannot commit \n%s", err)
-			os.Exit(1)
-		}
+		commitOutput = git.Commit(msg)
 	}
 
 	if branch == "" {
 		branch = git.GetUpstreamBranch()
 	}
 
-	branchRef := fmt.Sprintf("HEAD:refs/for/%s", branch)
 	options := []string{state}
-
-	var refSpec strings.Builder
-	refSpec.WriteString(branchRef)
-
 	if notPatchFlow() {
-		options = append(options, review.GetReviewers(reviewers)...)
+		options = append(options, review.ResolveReviewers(reviewers)...)
 	}
+	optionsStr := strings.Join(options[:], ",")
 
-	refSpec.WriteString("%" + strings.Join(options[:], ","))
+	refSpec := fmt.Sprintf("HEAD:refs/for/%s%%%s", branch, optionsStr)
+	pushOutput := git.Push(refSpec)
 
-	fmt.Println("Pushing to", branchRef)
-	pushOutput, err := git.Push(refSpec.String())
-	if err != nil {
-		fmt.Printf("Cannot push to %s\n%s\n%s", branchRef, pushOutput, err)
-		os.Exit(1)
-	}
-	result = append(result, pushOutput...)
-	return result
+	return append(commitOutput, pushOutput...)
 }
 
 func notPatchFlow() bool {

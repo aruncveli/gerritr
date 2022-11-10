@@ -1,0 +1,44 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version
+        required: true
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: release linux amd64
+        uses: wangyoucao577/go-release-action@v1.32
+        with:
+          github_token: '${{ secrets.GITHUB_TOKEN }}'
+          goos: linux
+          goarch: amd64
+          binary_name: gerritr
+          release_tag: ${{ github.event.inputs.version }}
+      - name: release windows amd64
+        uses: wangyoucao577/go-release-action@v1.32
+        with:
+          github_token: '${{ secrets.GITHUB_TOKEN }}'
+          goos: windows
+          goarch: amd64
+          binary_name: gerritr
+          release_tag: ${{ github.event.inputs.version }}
+      - name: release mac amd64
+        uses: wangyoucao577/go-release-action@v1.32
+        with:
+          github_token: '${{ secrets.GITHUB_TOKEN }}'
+          goos: darwin
+          goarch: amd64
+          binary_name: gerritr
+          release_tag: ${{ github.event.inputs.version }}
+      - name: release mac arm64
+        uses: wangyoucao577/go-release-action@v1.32
+        with:
+          github_token: '${{ secrets.GITHUB_TOKEN }}'
+          goos: darwin
+          goarch: arm64
+          binary_name: gerritr
+          release_tag: ${{ github.event.inputs.version }}

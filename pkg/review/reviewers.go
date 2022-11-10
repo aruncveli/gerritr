@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-const teamsKeyPrefix = "teams."
+const aliasPrefix = "alias."
 const reviewersFilename = "REVIEWERS"
 
 /*
@@ -14,7 +14,7 @@ Resolves reviewers from the input parameters and REVIEWERS file
 
 For each string in the input slice,
   - If it is an email ID, adds as is
-  - If it is not an email ID, assumes it to be a team name. Tries to resolve the team members' email IDs from config
+  - If it is not an email ID, assumes it to be a alias. Tries to resolve the alias from config
 
 Then, reads REVIEWERS file and adds each line. Returns a slice of resolved reviewers, with each element prefixed with "r=", as per [the format required by Gerrit].
 
@@ -30,9 +30,9 @@ func ResolveReviewers(reviewersInput []string) []string {
 			if IsEmail(reviewer) {
 				resolvedReviewers = append(resolvedReviewers, reviewer)
 			} else {
-				teamsKey := teamsKeyPrefix + reviewer
-				if Config.Exists(teamsKey) {
-					reviewersFromCfg := Config.Strings(teamsKey)
+				alias := aliasPrefix + reviewer
+				if Config.Exists(alias) {
+					reviewersFromCfg := Config.Strings(alias)
 					resolvedReviewers = append(resolvedReviewers, reviewersFromCfg...)
 				}
 			}

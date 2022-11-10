@@ -6,7 +6,7 @@ import (
 	"github.com/aruncveli/gerritr/pkg/action"
 )
 
-// Space separated list of reviewer email IDs or teams
+// Space separated list of reviewer email IDs or aliases
 var reviewers []string
 
 var pushCmd = &cobra.Command{
@@ -21,5 +21,5 @@ func init() {
 	rootCmd.AddCommand(pushCmd)
 
 	pushCmd.Flags().StringArrayVarP(&reviewers, "reviewers", "r", nil,
-		"Space separated list of reviewer email IDs or teams")
+		"Space separated list of reviewer email IDs or aliases")
 }

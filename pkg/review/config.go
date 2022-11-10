@@ -15,7 +15,7 @@ A [koanf] config with dot as delimiter.
 
 Loads $XDG_CONFIG_HOME/gerritr/config.yml expecting a structure like below:
 
-	teams:
+	aliases:
 		team1:
 	  	- b1@org.com
 	  	- b2@org.com

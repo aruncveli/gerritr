@@ -1,4 +1,4 @@
-teams:
+alias:
   backend:
     - b1@org.com
     - b2@org.com

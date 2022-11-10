@@ -34,10 +34,10 @@ func TestWithoutREVIEWERS(t *testing.T) {
 	}{
 		{"No reviewers", args{nil}, nil},
 
-		{"Single team from config", args{[]string{"backend"}},
+		{"Single alias from config", args{[]string{"backend"}},
 			[]string{"r=b1@org.com", "r=b2@org.com"}},
 
-		{"Multiple teams from config", args{[]string{"backend", "frontend"}},
+		{"Multiple alias from config", args{[]string{"backend", "frontend"}},
 			[]string{"r=b1@org.com", "r=b2@org.com", "r=f1@org.com", "r=f2@org.com"}},
 
 		{"Reviwer email as input", args{[]string{"x@com.org"}}, []string{"r=x@com.org"}},
@@ -67,11 +67,11 @@ func TestWithREVIEWERS(t *testing.T) {
 			args{nil},
 			[]string{"r=x1@org.com", "r=x2@org.com"}},
 
-		{"Specify single team from config",
+		{"Specify single alias from config",
 			args{[]string{"backend"}},
 			[]string{"r=b1@org.com", "r=b2@org.com", "r=x1@org.com", "r=x2@org.com"}},
 
-		{"Specify multiple teams from config",
+		{"Specify multiple alias from config",
 			args{[]string{"backend", "frontend"}},
 			[]string{"r=b1@org.com", "r=b2@org.com", "r=f1@org.com", "r=f2@org.com", "r=x1@org.com", "r=x2@org.com"}},
 	}

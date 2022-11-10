@@ -4,6 +4,11 @@ Wrapping some [Git](https://git-scm.com/) for [Gerrit](https://www.gerritcoderev
 
 A command line app with opinionated flows for a subset of Gerrit functionalities. Intended to ease people familiar with GitHub et al., to work with Gerrit. And hopefully help them remember to add reviewers to a change.
 
+Inspired from:
+* Lack of non-tedious way in [git-review](https://docs.opendev.org/opendev/git-review/latest/) to add reviewers
+* Lack of Python tooling for cross compilation
+* The ease of Golang tooling for cross compilation
+
 ## Installation
 Download the binary and add to `$PATH`.
 
@@ -22,39 +27,43 @@ Download the binary and add to `$PATH`.
 ### `push`
 
 #### Flags
-* `--reviewers` or `-r`: Space separated list of reviewer email IDs or teams
+* `--reviewers` or `-r`: Space separated list of reviewer email IDs or aliases
 
 Push the latest commit to the target branch, thereby [creating a new change](https://gerrit-documentation.storage.googleapis.com/Documentation/3.6.2/intro-gerrit-walkthrough.html#_creating_the_review) in Gerrit.
 
-Adding reviewers automatically is possible in two ways:
+Adding reviewers without verbosely typing in everyone's email ID, is possible in two ways:
 #### `config.yml` or global config
-* Go to:
+* Go to
 	* `~/.config` for Linux
-	* `~/Library/Application Support` for MacOS
+	* `~/Library/Application Support` for macOS
 	* `%LOCALAPPDATA%` for Windows
 * Create a `gerritr` directory there. Go inside `gerritr`.
 * Add a `config.yml` there with content similar to the sample below:
 	```YAML
-	teams:
+	alias:
 	  backend:
 		- b1@org.com
 		- b2@org.com
 	  frontend:
 		- f1@org.com
 		- f2@org.com
+	  someone:
+	    - someone.with.long.email.id@somewhere.com
+	  ...
 	```
+The configured aliases can then be used as arguments to `--reviewers`.
 
-#### `REVIEWERS` or repository specific config
-Add a plaintext `REVIEWERS` file to the repository root directory, with a list of email IDs of people who should **always be added to every change pushed from this repository**:
+#### `REVIEWERS` or local config
+Add a plaintext `REVIEWERS` file to the repository root directory, with a list of email IDs of people who should **always be added as reviewers to every change pushed from this repository**:
 ```Text
 r1@org.com
 r2@org.com
 ...
 ```
 
-Both the ways to add reviewers are independent. They can work together and alone:
-* After just the above global configuration in place, `gerritr push -r backend x1@org.com` will add `x1@org.com`, `b1@org.com` and `b2@org.com` as reviewers
-* After just the above local configuration in place, `gerritr push` will add `r1@org.com` and `r2@org.com` as reviewers
+Both the ways to add reviewers are independent:
+* With just the above global configuration in place, `gerritr push -r backend x1@org.com` will add `x1@org.com`, `b1@org.com` and `b2@org.com` as reviewers
+* With just the above local configuration in place, `gerritr push` will add `r1@org.com` and `r2@org.com` as reviewers
 * With both of the above sample configurations in place, `gerritr push -r x1@org.com frontend` will add `x1@org.com`, `b1@org.com`, `b2@org.com`, `r1@org.com` and `r2@org.com` as reviewers
 
 ### `patch`

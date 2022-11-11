@@ -22,15 +22,15 @@ Returns a slice of resolved reviewers, with each element prefixed with "r=", as 
 
 [the format required by Gerrit]: https://gerrit-documentation.storage.googleapis.com/Documentation/3.6.2/user-upload.html#reviewers
 */
-func ResolveReviewers(reviewersFromCmd []string) []string {
+func Resolve(reviewersFromCmd []string) []string {
 
 	fmt.Println("Resolving reviewers")
 	var resolvedReviewers []string
 
 	var localCfgChan chan []string = make(chan []string)
 	go addFromLocalCfg(localCfgChan)
-	resolvedReviewers = addFromGlobalCfg(reviewersFromCmd)
 
+	resolvedReviewers = addFromGlobalCfg(reviewersFromCmd)
 	reviewersFromLocalCfg := <-localCfgChan
 	resolvedReviewers = append(resolvedReviewers, reviewersFromLocalCfg...)
 

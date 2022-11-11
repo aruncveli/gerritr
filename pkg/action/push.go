@@ -32,7 +32,7 @@ func Push(branch string, state string, msg string, reviewers []string) []byte {
 
 	options := []string{state}
 	if notPatchFlow() {
-		options = append(options, review.ResolveReviewers(reviewers)...)
+		options = append(options, review.Resolve(reviewers)...)
 	}
 	optionsStr := strings.Join(options[:], ",")
 

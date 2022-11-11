@@ -44,7 +44,7 @@ func TestWithoutREVIEWERS(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := review.ResolveReviewers(tt.args.revIp); !reflect.DeepEqual(got, tt.want) {
+			if got := review.Resolve(tt.args.revIp); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetReviewers() = %v, want %v", got, tt.want)
 			}
 		})
@@ -77,7 +77,7 @@ func TestWithREVIEWERS(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := review.ResolveReviewers(tt.args.revIp); !reflect.DeepEqual(got, tt.want) {
+			if got := review.Resolve(tt.args.revIp); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("GetReviewers() = %v, want %v", got, tt.want)
 			}
 		})

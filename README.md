@@ -66,7 +66,7 @@ r2@org.com
 Both the ways to add reviewers are independent:
 * With just the above global configuration in place, `gerritr push -r backend x1@org.com` will add `x1@org.com`, `b1@org.com` and `b2@org.com` as reviewers
 * With just the above local configuration in place, `gerritr push` will add `r1@org.com` and `r2@org.com` as reviewers
-* With both of the above sample configurations in place, `gerritr push -r x1@org.com frontend` will add `x1@org.com`, `b1@org.com`, `b2@org.com`, `r1@org.com` and `r2@org.com` as reviewers
+* With both of the above sample configurations in place, `gerritr push -r x1@org.com frontend` will add `x1@org.com`, `f1@org.com`, `f2@org.com`, `r1@org.com` and `r2@org.com` as reviewers
 
 ### `patch`
 

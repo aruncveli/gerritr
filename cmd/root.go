@@ -47,7 +47,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.Version = "v1.0.0-rc"
+	rootCmd.Version = "v1.0.1"
 
 	rootCmd.PersistentFlags().StringVarP(&Branch, "branch", "b", "",
 		"Target branch name")

@@ -31,7 +31,7 @@ func Commit(msg string) []byte {
 	output, err := run(arg...)
 	if err != nil {
 		fmt.Println("Cannot commit")
-		fmt.Println(output)
+		fmt.Printf("%s", output)
 		os.Exit(1)
 	}
 	return output
@@ -44,7 +44,7 @@ func Push(refSpec string) []byte {
 	output, err := run(arg...)
 	if err != nil {
 		fmt.Println("Cannot push")
-		fmt.Println(output)
+		fmt.Printf("%s", output)
 		os.Exit(1)
 	}
 	return output
@@ -55,7 +55,7 @@ func amendWithMsg(msg string) []byte {
 	output, err := run(arg...)
 	if err != nil {
 		fmt.Println("Cannot amend")
-		fmt.Println(output)
+		fmt.Printf("%s", output)
 		os.Exit(1)
 	}
 	return output
@@ -65,7 +65,7 @@ func amendNoEdit() []byte {
 	output, err := run(amendNoEditArgs...)
 	if err != nil {
 		fmt.Println("Cannot amend")
-		fmt.Println(output)
+		fmt.Printf("%s", output)
 		os.Exit(1)
 	}
 	return output
